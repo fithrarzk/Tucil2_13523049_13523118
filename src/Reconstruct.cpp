@@ -33,10 +33,14 @@ void reconstructNode(QuadTreeNode* node, unsigned char* output, int imgWidth, in
 void reconstructAndSaveImage(const QuadTree& qt, const std::string& filename) {
     int width = qt.getWidth();
     int height = qt.getHeight();
-    int channels = qt.getRoot()->color.size(); // Ambil dari leaf
+    int channels = qt.getChannels();
 
     unsigned char* outputImage = new unsigned char[width * height * channels];
     reconstructNode(qt.getRoot().get(), outputImage, width, height, channels);
+    int center = ((height / 2) * width + (width / 2)) * channels;
+    std::cout << "Sample pixel: ";
+    for (int c = 0; c < channels; ++c) std::cout << (int)outputImage[center + c] << " ";
+    std::cout << std::endl;
 
     // Ambil ekstensi file output
     std::string ext = filename.substr(filename.find_last_of('.') + 1);
@@ -53,12 +57,6 @@ void reconstructAndSaveImage(const QuadTree& qt, const std::string& filename) {
         success = stbi_write_jpg(filename.c_str(), width, height, channels, outputImage, 100); // 100 = kualitas maksimal
     } else {
         std::cerr << "Format gambar tidak didukung (hanya PNG dan JPG/JPEG)." << std::endl;
-    }
-
-    if (success) {
-        std::cout << "Image saved to: " << filename << std::endl;
-    } else {
-        std::cerr << "Gagal menyimpan gambar!" << std::endl;
     }
 
     delete[] outputImage;

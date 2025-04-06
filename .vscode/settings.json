@@ -37,6 +37,7 @@
         "mutex": "cpp",
         "print": "cpp",
         "variant": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "iomanip": "cpp"
     }
 }

@@ -43,6 +43,7 @@ public:
 
     int getWidth() const;
     int getHeight() const;
+    int getChannels() const;
 
 private:
     std::unique_ptr<QuadTreeNode> root;
@@ -64,7 +65,7 @@ private:
     std::vector<uint8_t> calculateAverageColor(const std::vector<uint8_t>& block);
 
     // Hitung error antara blok dan warna rata-rata
-    double calculateError(const std::vector<uint8_t>& block, const std::vector<uint8_t>& avgColor);
+    double calculateError(const std::vector<uint8_t>& block, const std::vector<uint8_t>& avgColor, int width, int height);
 };
 
 #endif

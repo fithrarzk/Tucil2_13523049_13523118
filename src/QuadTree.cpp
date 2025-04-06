@@ -13,6 +13,7 @@ QuadTree::QuadTree(const unsigned char* img, int width, int height, int channels
 
 void QuadTree::buildTree() {
     root = build(0, 0, imgWidth, imgHeight, 0);
+
 }
 
 std::vector<uint8_t> QuadTree::getBlock(int x, int y, int width, int height) {
@@ -24,6 +25,7 @@ std::vector<uint8_t> QuadTree::getBlock(int x, int y, int width, int height) {
             }
         }
     }
+
     return block;
 }
 
@@ -34,21 +36,33 @@ std::vector<uint8_t> QuadTree::calculateAverageColor(const std::vector<uint8_t>&
         sum[i % channels] += block[i];
     }
     std::vector<uint8_t> avg(channels);
+    // std::cout << "Rata-rata warna: ";
+    // for (uint8_t c : avg) std::cout << (int)c << " ";
+    // std::cout << std::endl;
     for (int c = 0; c < channels; ++c) {
         avg[c] = static_cast<uint8_t>(sum[c] / totalPixels);
     }
+
     return avg;
 }
 
-double QuadTree::calculateError(const std::vector<uint8_t>& block, const std::vector<uint8_t>& avgColor) {
+double QuadTree::calculateError(const std::vector<uint8_t>& block, const std::vector<uint8_t>& avgColor, int width, int height) {
+    // Untuk metode MAD, VARIANCE, ENTROPY, bandingkan block dengan dirinya sendiri
+    if (errorMethod == MAD_METHOD || errorMethod == VARIANCE_METHOD || errorMethod == ENTROPY_METHOD) {
+        return ErrorCalculator::calculateError(errorMethod, block, block, width, height);
+    }
+
+    // Untuk metode lain (MAE, MAXDIFF, SSIM), buat avgBlock
     std::vector<uint8_t> avgBlock(block.size());
     for (size_t i = 0; i < block.size(); i += channels) {
         for (int c = 0; c < channels; ++c) {
             avgBlock[i + c] = avgColor[c];
         }
     }
-    return ErrorCalculator::calculateError(errorMethod, block, avgBlock, block.size() / channels, channels);
+    return ErrorCalculator::calculateError(errorMethod, block, avgBlock, width, height);
 }
+
+
 
 std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int height, int depth) {
     auto node = std::make_unique<QuadTreeNode>(x, y, width, height);
@@ -57,7 +71,10 @@ std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int heigh
 
     auto block = getBlock(x, y, width, height);
     auto avgColor = calculateAverageColor(block);
-    double error = calculateError(block, avgColor);
+    double error = calculateError(block, avgColor, width, height);
+
+    // std::cout << "Error at (" << x << "," << y << "), size = (" << width << "x" << height 
+    //       << "), error = " << error << std::endl;
 
     if (width <= minBlockSize || height <= minBlockSize || error <= threshold) {
         node->isLeaf = true;
@@ -91,3 +108,4 @@ const std::unique_ptr<QuadTreeNode>& QuadTree::getRoot() const {
 
 int QuadTree::getWidth() const { return imgWidth; }
 int QuadTree::getHeight() const { return imgHeight; }
+int QuadTree::getChannels() const { return channels; }
