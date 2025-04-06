@@ -17,7 +17,6 @@ namespace ErrorCalculator {
     typedef vector<uint8_t> Block;
 
     // Semua fungsi menerima dua blok (dengan lebar & tinggi sama), dan ukuran blok
-    double calculateMSE(const Block& block1, const Block& block2, int width, int height);
     double calculateMAE(const Block& block1, const Block& block2, int width, int height);
     double calculateMaxDiff(const Block& block1, const Block& block2, int width, int height);
     double calculateVariance(const Block& block, int width, int height);

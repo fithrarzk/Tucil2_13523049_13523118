@@ -4,16 +4,6 @@
 #include <numeric>
 
 namespace ErrorCalculator {
-    double calculateMSE(const Block& block1, const Block& block2, int width, int height) {
-        double mse = 0.0;
-        int size = width * height * 3;
-        for (int i = 0; i < size; ++i) {
-            double diff = static_cast<double>(block1[i]) - static_cast<double>(block2[i]);
-            mse += diff * diff;
-        }
-        return mse / size;
-    }
-
     double calculateMAE(const Block& block1, const Block& block2, int width, int height) {
         double mae = 0.0;
         int size = width * height * 3;
@@ -84,8 +74,6 @@ namespace ErrorCalculator {
 
     double calculateError(int methodId, const Block& block1, const Block& block2, int width, int height) {
         switch (methodId) {
-            case MSE_METHOD:
-                return calculateMSE(block1, block2, width, height);
             case MAE_METHOD:
                 return calculateMAE(block1, block2, width, height);
             case MAX_DIFF_METHOD:

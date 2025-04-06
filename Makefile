@@ -12,7 +12,6 @@ SRCS = $(SRC_DIR)/ErrorCalculator.cpp \
        $(SRC_DIR)/IO.cpp \
        $(SRC_DIR)/QuadTree.cpp \
        $(SRC_DIR)/Reconstruct.cpp \
-       $(SRC_DIR)/Statistics.cpp \
        $(SRC_DIR)/main.cpp \
        $(SRC_DIR)/external-libs/stb_img.cpp
 

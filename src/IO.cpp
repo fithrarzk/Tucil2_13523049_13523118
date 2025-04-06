@@ -6,13 +6,30 @@
 
 using namespace std;
 
+// Tampilkan daftar metode error yang tersedia
+void printErrorMethodOptions() {
+    cout << "Pilih metode error:\n";
+    cout << "1 = Variance\n";
+    cout << "2 = MAD (Mean Absolute Deviation)\n";
+    cout << "3 = Max Pixel Difference\n";
+    cout << "4 = Entropy\n";
+    cout << "5 = SSIM\n";
+}
+
 InputParams getUserInput() {
     InputParams params;
+
     cout << "Masukkan path gambar input (absolute path): ";
     getline(cin, params.inputImagePath);
 
-    cout << "Pilih metode error (1 = MSE, 2 = MAE): ";
-    cin >> params.errorMethod;
+    // Validasi metode error
+    printErrorMethodOptions();
+    while (true) {
+        cout << "Pilihanmu (1-5): ";
+        cin >> params.errorMethod;
+        if (params.errorMethod >= 1 && params.errorMethod <= 5) break;
+        cout << "Metode tidak valid! Silakan pilih antara 1 sampai 5.\n";
+    }
 
     cout << "Masukkan threshold: ";
     cin >> params.threshold;
@@ -61,4 +78,3 @@ unsigned char* load_image(const char* filename, int& width, int& height, int& ch
     }
     return data;
 }
-

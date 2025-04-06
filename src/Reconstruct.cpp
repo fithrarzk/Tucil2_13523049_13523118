@@ -1,41 +1,64 @@
 #include "external-libs/stb_image_write.h"
 #include "header/QuadTree.hpp"
 #include <iostream>
+#include <algorithm>
 
-// Fungsi rekonstruksi dari QuadTree
-void reconstructNode(QuadTreeNode* node, unsigned char* output, int imgWidth, int channels) {
+void reconstructNode(QuadTreeNode* node, unsigned char* output, int imgWidth, int imgHeight, int channels) {
     if (node->isLeaf) {
         for (int j = 0; j < node->height; ++j) {
             for (int i = 0; i < node->width; ++i) {
-                int idx = ((node->y + j) * imgWidth + (node->x + i)) * channels;
-                for (int c = 0; c < channels; ++c) {
-                    output[idx + c] = node->color[c];
+                int x = node->x + i;
+                int y = node->y + j;
+
+                // Cegah akses di luar batas gambar
+                if (x < imgWidth && y < imgHeight) {
+                    int idx = (y * imgWidth + x) * channels;
+                    for (int c = 0; c < channels; ++c) {
+                        output[idx + c] = node->color[c];
+                    }
                 }
             }
         }
     } else {
         for (const auto& child : node->children) {
             if (child) {
-                reconstructNode(child.get(), output, imgWidth, channels);
+                reconstructNode(child.get(), output, imgWidth, imgHeight, channels);
             }
         }
     }
 }
 
+
 // Wrapper untuk reconstruct dan simpan gambar
 void reconstructAndSaveImage(const QuadTree& qt, const std::string& filename) {
-    int width = qt.getRoot()->width;
-    int height = qt.getRoot()->height;
-    int channels = qt.getRoot()->color.size(); // Ambil dari leaf, asumsinya semua node pakai channel yg sama
+    int width = qt.getWidth();
+    int height = qt.getHeight();
+    int channels = qt.getRoot()->color.size(); // Ambil dari leaf
 
     unsigned char* outputImage = new unsigned char[width * height * channels];
+    reconstructNode(qt.getRoot().get(), outputImage, width, height, channels);
 
-    reconstructNode(qt.getRoot().get(), outputImage, width, channels);
+    // Ambil ekstensi file output
+    std::string ext = filename.substr(filename.find_last_of('.') + 1);
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower); // lowercase biar aman
 
-    if (stbi_write_png(filename.c_str(), width, height, channels, outputImage, width * channels)) {
+    bool success = false;
+
+    if (ext == "png") {
+        success = stbi_write_png(filename.c_str(), width, height, channels, outputImage, width * channels);
+    } else if (ext == "jpg" || ext == "jpeg") {
+        if (channels == 4) {
+            std::cerr << "Warning: JPEG tidak mendukung alpha channel (transparansi). Output mungkin tidak akurat." << std::endl;
+        }
+        success = stbi_write_jpg(filename.c_str(), width, height, channels, outputImage, 100); // 100 = kualitas maksimal
+    } else {
+        std::cerr << "Format gambar tidak didukung (hanya PNG dan JPG/JPEG)." << std::endl;
+    }
+
+    if (success) {
         std::cout << "Image saved to: " << filename << std::endl;
     } else {
-        std::cerr << "Failed to save image!" << std::endl;
+        std::cerr << "Gagal menyimpan gambar!" << std::endl;
     }
 
     delete[] outputImage;

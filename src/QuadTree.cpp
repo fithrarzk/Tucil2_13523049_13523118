@@ -1,6 +1,8 @@
 #include "header/QuadTree.hpp"
 #include <cmath>
 #include <cstring>
+#include <iostream>
+#include <iomanip>
 
 QuadTree::QuadTree(const unsigned char* img, int width, int height, int channels,
                    int minBlockSize, double threshold, int errorMethod)
@@ -86,3 +88,6 @@ int QuadTree::getTotalNodes() const {
 const std::unique_ptr<QuadTreeNode>& QuadTree::getRoot() const {
     return root;
 }
+
+int QuadTree::getWidth() const { return imgWidth; }
+int QuadTree::getHeight() const { return imgHeight; }

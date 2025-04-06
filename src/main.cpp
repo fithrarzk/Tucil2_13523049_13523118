@@ -3,7 +3,6 @@
 #include "header/IO.hpp"
 #include "header/QuadTree.hpp"
 #include "header/Reconstruct.hpp"
-#include "header/Statistics.hpp"
 #include "external-libs/stb_image_write.h"
 #include "external-libs/stb_image.h"
 

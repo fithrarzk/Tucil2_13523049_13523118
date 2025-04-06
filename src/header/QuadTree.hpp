@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <cstdint>
+#include <string>
 #include "ErrorCalculator.hpp"
 
 // Struktur node pohon kuad untuk representasi area gambar
@@ -39,6 +40,9 @@ public:
 
     // Dapatkan jumlah total node dalam pohon
     int getTotalNodes() const;
+
+    int getWidth() const;
+    int getHeight() const;
 
 private:
     std::unique_ptr<QuadTreeNode> root;
