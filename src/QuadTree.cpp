@@ -10,10 +10,8 @@ QuadTree::QuadTree(const unsigned char* img, int width, int height, int channels
       minBlockSize(minBlockSize), threshold(threshold), errorMethod(errorMethod),
       maxDepth(0), totalNodes(0) {}
 
-
 void QuadTree::buildTree() {
     root = build(0, 0, imgWidth, imgHeight, 0);
-
 }
 
 std::vector<uint8_t> QuadTree::getBlock(int x, int y, int width, int height) {
@@ -47,12 +45,12 @@ std::vector<uint8_t> QuadTree::calculateAverageColor(const std::vector<uint8_t>&
 }
 
 double QuadTree::calculateError(const std::vector<uint8_t>& block, const std::vector<uint8_t>& avgColor, int width, int height) {
-    // Untuk metode MAD, VARIANCE, ENTROPY, bandingkan block dengan dirinya sendiri
+    // bandingkan block dengan dirinya sendiri
     if (errorMethod == MAD_METHOD || errorMethod == VARIANCE_METHOD || errorMethod == ENTROPY_METHOD) {
         return ErrorCalculator::calculateError(errorMethod, block, block, width, height);
     }
 
-    // Untuk metode lain (MAE, MAXDIFF, SSIM), buat avgBlock
+    // buat avgBlock
     std::vector<uint8_t> avgBlock(block.size());
     for (size_t i = 0; i < block.size(); i += channels) {
         for (int c = 0; c < channels; ++c) {

@@ -23,7 +23,7 @@ int main() {
 
     size_t originalSize = width * height * channels;
 
-    // 3. Bangun pohon quadtree dan ukur waktu
+    // 3. Ini buat quadtree rel
     auto start = high_resolution_clock::now();
     QuadTree qt(image, width, height, channels, params.minBlockSize, params.threshold, params.errorMethod);
     qt.buildTree();
@@ -31,7 +31,7 @@ int main() {
 
     double executionTime = duration<double>(end - start).count();
 
-    // 4. Rekonstruksi dan simpan gambar
+    // 4. Ini rekonstruksi gambarnya rel
     reconstructAndSaveImage(qt, params.outputImagePath);
     printImageSavedMessage(params.outputImagePath);
 
@@ -39,7 +39,7 @@ int main() {
     size_t nodeSizeBytes = sizeof(QuadTreeNode);
     size_t compressedSize = qt.getTotalNodes() * nodeSizeBytes;
 
-    // 6. Print statistik
+    // 6. print
     OutputStats stats {
         executionTime,
         originalSize,

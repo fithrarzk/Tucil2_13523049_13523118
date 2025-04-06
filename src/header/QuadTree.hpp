@@ -7,7 +7,6 @@
 #include <string>
 #include "ErrorCalculator.hpp"
 
-// Struktur node pohon kuad untuk representasi area gambar
 struct QuadTreeNode {
     int x, y;                     // Koordinat kiri atas blok
     int width, height;           // Ukuran blok
@@ -23,24 +22,14 @@ struct QuadTreeNode {
 }
 };
 
-// Kelas QuadTree untuk membangun dan menyimpan pohon kuad dari gambar
 class QuadTree {
 public:
     QuadTree(const unsigned char* image, int width, int height, int channels,
              int minBlockSize, double threshold, int errorMethod);
-
-    // Bangun pohon quadtree dari gambar
     void buildTree();
-
-    // Akses akar pohon
     const std::unique_ptr<QuadTreeNode>& getRoot() const;
-
-    // Dapatkan kedalaman maksimum pohon
     int getMaxDepth() const;
-
-    // Dapatkan jumlah total node dalam pohon
     int getTotalNodes() const;
-
     int getWidth() const;
     int getHeight() const;
     int getChannels() const;

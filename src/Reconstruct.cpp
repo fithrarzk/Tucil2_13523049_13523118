@@ -38,13 +38,9 @@ void reconstructAndSaveImage(const QuadTree& qt, const std::string& filename) {
     unsigned char* outputImage = new unsigned char[width * height * channels];
     reconstructNode(qt.getRoot().get(), outputImage, width, height, channels);
     int center = ((height / 2) * width + (width / 2)) * channels;
-    std::cout << "Sample pixel: ";
-    for (int c = 0; c < channels; ++c) std::cout << (int)outputImage[center + c] << " ";
-    std::cout << std::endl;
 
-    // Ambil ekstensi file output
     std::string ext = filename.substr(filename.find_last_of('.') + 1);
-    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower); // lowercase biar aman
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower); 
 
     bool success = false;
 
