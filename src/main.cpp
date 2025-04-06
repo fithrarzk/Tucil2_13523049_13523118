@@ -44,7 +44,7 @@ int main() {
         executionTime,
         originalSize,
         compressedSize,
-        static_cast<double>(originalSize) / compressedSize,
+        compressedSize/static_cast<double>(originalSize),
         qt.getMaxDepth(),
         qt.getTotalNodes()
     };

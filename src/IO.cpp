@@ -55,7 +55,7 @@ void printOutputStats(const OutputStats& stats) {
     cout << "Waktu eksekusi          : " << stats.executionTime << " detik\n";
     cout << "Ukuran gambar sebelum   : " << stats.originalSize << " bytes\n";
     cout << "Ukuran gambar setelah   : " << stats.compressedSize << " bytes\n";
-    cout << "Persentase kompresi     : " << stats.compressionRatio * 100 << "%\n";
+    cout << "Persentase kompresi     : " << (1-stats.compressionRatio)*100 << "%\n";
     cout << "Kedalaman pohon         : " << stats.maxDepth << "\n";
     cout << "Jumlah simpul pohon     : " << stats.totalNodes << "\n";
 }
