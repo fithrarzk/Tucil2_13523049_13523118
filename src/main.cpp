@@ -31,9 +31,12 @@ int main() {
 
     double executionTime = duration<double>(end - start).count();
 
-    // 4. Ini rekonstruksi gambarnya rel
+    // 4. Ini rekonstruksi gambarnya sama gif rel
     reconstructAndSaveImage(qt, params.outputImagePath);
     printImageSavedMessage(params.outputImagePath);
+    if (!params.outputGifPath.empty()) {
+        reconstructAndSaveWithGif(qt, params.outputGifPath);
+    }
 
     // 5. Hitung ukuran kompresi (asumsi ukuran simpul)
     size_t nodeSizeBytes = sizeof(QuadTreeNode);
@@ -50,8 +53,6 @@ int main() {
     };
 
     printOutputStats(stats);
-
-    printGifSavedMessage(params.outputGifPath);
 
     // 7. Cleanup
     stbi_image_free(image);
