@@ -1,6 +1,7 @@
 #include "header/IO.hpp"
 #include <iostream>
 #include <limits>
+#include <algorithm>
 #include "external-libs/stb_image.h"
 #include "external-libs/stb_image_write.h"
 
