@@ -75,4 +75,4 @@ Jika Anda belum menginstal library yang diperlukan, silakan instal terlebih dahu
 |    Library       |                                 Cara Install                                                                   |
 | :--------------: | :------------------------------------------------------------------------------------------------------------: |
 | STB(header-only) | terdapat pada folder `external-libs`                                                                           |
-| Imagemagick      | `brew install imagemagick` untuk Mac, `sudo apt install imagemagick` untuk Linux, atau install melalui browser |
+| Imagemagick      | `brew install imagemagick` untuk Mac, `sudo apt install imagemagick` untuk Linux, atau install melalui browser untuk Windows |
