@@ -39,6 +39,7 @@
         "variant": "cpp",
         "algorithm": "cpp",
         "iomanip": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "map": "cpp"
     }
 }
