@@ -29,6 +29,7 @@ Program ini mengimplementasikan algoritma Divide and Conquer dalam bentuk metode
 │   Makefile
 │
 ├───bin                                 # File binary hasil kompilasi
+│   └─── image_compressor.exe
 │
 ├───doc
 │   └─── Tucil2_13523049_13523118.pdf   # Berisi laporan akhir
@@ -55,9 +56,9 @@ Program ini mengimplementasikan algoritma Divide and Conquer dalam bentuk metode
 
 ## How to Run
 1. Clone repository ini dengan mengetikkan `git clone https://github.com/fithrarzk/Tucil2_13523049_13523118` pada terminal.
-2. Pindah ke directory src dengan `cd src`.
-3. Jalankan `g++ -std=c++17 -O2 -Wall main.cpp IO.cpp ErrorCalculator.cpp QuadTree.cpp Reconstruct.cpp external-libs/stb_img.cpp -I./header -I./external-libs -o image_compressor.exe` pada terminal untuk kompilasi.
-3. Run file dengan `./image_compressor.exe`.
+2. Pindah ke directory folder dengan `cd Tucil2_13523049_13523118`.
+3. Jalankan `g++ -std=c++17 -O2 -Wall src/main.cpp src/IO.cpp src/ErrorCalculator.cpp src/QuadTree.cpp src/Reconstruct.cpp src/external-libs/stb_img.cpp -I./src/header -I./src/external-libs -o bin/image_compressor.exe` pada terminal untuk kompilasi.
+3. Run file dengan `./bin/image_compressor.exe`.
 4. Input absolute path gambar yang ingin dikompresi.
 5. Input metode error yang ingin digunakan.
 6. Input threshold yang digunakan (>=0).
