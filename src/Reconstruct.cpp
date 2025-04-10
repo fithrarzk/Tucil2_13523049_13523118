@@ -163,17 +163,14 @@ void reconstructByLevel(const QuadTree& qt, const std::string& gifPath) {
     int height = qt.getHeight();
     int channels = qt.getChannels();
 
-    // Validasi input
     if (width <= 0 || height <= 0 || channels <= 0) {
         std::cerr << "Dimensi atau channel gambar tidak valid." << std::endl;
         return;
     }
 
-    // Inisialisasi gambar putih
     unsigned char* image = new unsigned char[width * height * channels];
-    std::fill(image, image + width * height * channels, 255);
+    std::fill(image, image + width * height * channels, 255);  // background putih
 
-    // Setup path untuk folder frame
     fs::path gifFilePath(gifPath);
     fs::path gifDir = gifFilePath.parent_path();
     std::string frameFolder = (gifDir / "frames").string();
@@ -189,7 +186,6 @@ void reconstructByLevel(const QuadTree& qt, const std::string& gifPath) {
     std::cout << "Membuat folder frame di: " << frameFolder << std::endl;
     frameCounter = 0;
 
-    // === Mulai BFS traversal untuk setiap level ===
     std::queue<QuadTreeNode*> q;
     q.push(qt.getRoot().get());
 
@@ -199,47 +195,51 @@ void reconstructByLevel(const QuadTree& qt, const std::string& gifPath) {
         for (int i = 0; i < levelSize; ++i) {
             QuadTreeNode* node = q.front(); q.pop();
 
-            if (node->isLeaf) {
-                for (int j = 0; j < node->height; ++j) {
-                    for (int i = 0; i < node->width; ++i) {
-                        int x = node->x + i;
-                        int y = node->y + j;
-                        if (x < width && y < height) {
-                            int idx = (y * width + x) * channels;
-                            for (int c = 0; c < channels; ++c) {
-                                image[idx + c] = node->color[c];
-                            }
+            // Gunakan warna dari node (sudah diset semua di build)
+            std::vector<uint8_t>& color = node->color;
+
+            for (int j = 0; j < node->height; ++j) {
+                for (int i = 0; i < node->width; ++i) {
+                    int x = node->x + i;
+                    int y = node->y + j;
+                    if (x < width && y < height) {
+                        int idx = (y * width + x) * channels;
+                        for (int c = 0; c < channels; ++c) {
+                            image[idx + c] = color[c];
                         }
                     }
                 }
-            } else {
+            }
+
+            // Tambahkan anak-anak ke antrian
+            if (!node->isLeaf) {
                 for (const auto& child : node->children) {
                     if (child) q.push(child.get());
                 }
             }
         }
 
-        saveFrame(image, width, height, channels, frameFolder);  // Simpan frame setelah tiap level
+        saveFrame(image, width, height, channels, frameFolder);
     }
 
-    // === Generate GIF menggunakan ImageMagick ===
-    std::string command = "magick -delay 20 -loop 0 " + frameFolder + "/frame_*.png " + gifPath;
+    // Buat GIF menggunakan ImageMagick
+    std::string command = "magick -delay 20 -loop 0 \"" + frameFolder + "/frame_*.png\" \"" + gifPath + "\"";
     std::cout << "Membuat GIF: " << command << std::endl;
     int result = std::system(command.c_str());
 
     if (result != 0) {
-        std::cerr << "Gagal membuat GIF. Pastikan 'magick' dari ImageMagick tersedia dan input PNG valid." << std::endl;
+        std::cerr << "Gagal membuat GIF. Pastikan ImageMagick tersedia." << std::endl;
     } else {
-        std::cout << "GIF proses disimpan sebagai " << gifPath << std::endl;
-
-        // Hapus folder frame setelah berhasil
-        // try {
-        //     fs::remove_all(frameFolder);
-        //     std::cout << "Folder frame sementara dihapus: " << frameFolder << std::endl;
-        // } catch (const fs::filesystem_error& e) {
-        //     std::cerr << "Gagal menghapus folder frame: " << e.what() << std::endl;
-        // }
+        std::cout << "GIF disimpan: " << gifPath << std::endl;
+        try {
+            fs::remove_all(frameFolder);
+            std::cout << "Folder frame sementara dihapus: " << frameFolder << std::endl;
+        } catch (const fs::filesystem_error& e) {
+            std::cerr << "Gagal menghapus folder frame: " << e.what() << std::endl;
+        }
     }
 
     delete[] image;
 }
+
+

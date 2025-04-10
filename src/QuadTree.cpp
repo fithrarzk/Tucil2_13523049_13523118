@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <queue>
 #include <map>
+#include <functional>
 
 QuadTree::QuadTree(const unsigned char* img, int width, int height, int channels,
                    int minBlockSize, double threshold, int errorMethod)
@@ -64,11 +65,16 @@ std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int heigh
 
     auto block = getBlock(x, y, width, height);
     auto avgColor = calculateAverageColor(block);
-    double error = calculateError(block, avgColor, width, height);
+    // double error = calculateError(block, avgColor, width, height);
 
-    if (width <= minBlockSize || height <= minBlockSize || error <= threshold) {
+    // if (width <= minBlockSize || height <= minBlockSize || error <= threshold) {
+    //     node->isLeaf = true;
+    //     node->color = avgColor;
+    //     return node;
+    // }
+    node->color = avgColor;
+    if (width <= minBlockSize || height <= minBlockSize) {
         node->isLeaf = true;
-        node->color = avgColor;
         return node;
     }
 
