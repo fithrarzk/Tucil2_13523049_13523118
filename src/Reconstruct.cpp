@@ -223,7 +223,7 @@ void reconstructByLevel(const QuadTree& qt, const std::string& gifPath) {
     }
 
     // Buat GIF menggunakan ImageMagick
-    std::string command = "magick -delay 20 -loop 0 \"" + frameFolder + "/frame_*.png\" \"" + gifPath + "\"";
+    std::string command = "magick -delay 50 -loop 0 \"" + frameFolder + "/frame_*.png\" \"" + gifPath + "\"";
     std::cout << "Membuat GIF: " << command << std::endl;
     int result = std::system(command.c_str());
 

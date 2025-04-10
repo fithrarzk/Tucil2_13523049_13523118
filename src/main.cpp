@@ -1,11 +1,13 @@
 #include <iostream>
 #include <chrono>
+#include <filesystem>
 #include "header/IO.hpp"
 #include "header/QuadTree.hpp"
 #include "header/Reconstruct.hpp"
 #include "external-libs/stb_image_write.h"
 #include "external-libs/stb_image.h"
 
+namespace fs = std::filesystem;
 using namespace std;
 using namespace std::chrono;
 
@@ -21,7 +23,7 @@ int main() {
         return 1;
     }
 
-    size_t originalSize = width * height * channels;
+    size_t originalSize = fs::file_size(params.inputImagePath);
 
     // 3. Ini buat quadtree rel
     auto start = high_resolution_clock::now();
@@ -29,7 +31,7 @@ int main() {
     qt.buildTree();
     auto end = high_resolution_clock::now();
 
-    double executionTime = duration<double>(end - start).count();
+    double executionTime = duration_cast<milliseconds>(end - start).count();
 
     // 4. Ini rekonstruksi gambarnya sama gif rel
     reconstructAndSaveImage(qt, params.outputImagePath);
@@ -40,7 +42,7 @@ int main() {
 
     // 5. Hitung ukuran kompresi (asumsi ukuran simpul)
     size_t nodeSizeBytes = sizeof(QuadTreeNode);
-    size_t compressedSize = qt.getTotalNodes() * nodeSizeBytes;
+    size_t compressedSize = fs::file_size(params.outputImagePath);
 
     // 6. print
     OutputStats stats {

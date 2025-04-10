@@ -52,7 +52,7 @@ InputParams getUserInput() {
 
 void printOutputStats(const OutputStats& stats) {
     cout << "\n===== Statistik Kompresi =====\n";
-    cout << "Waktu eksekusi          : " << stats.executionTime << " detik\n";
+    cout << "Waktu eksekusi          : " << stats.executionTime << " ms\n";
     cout << "Ukuran gambar sebelum   : " << stats.originalSize << " bytes\n";
     cout << "Ukuran gambar setelah   : " << stats.compressedSize << " bytes\n";
     cout << "Persentase kompresi     : " << (1-stats.compressionRatio)*100 << "%\n";
