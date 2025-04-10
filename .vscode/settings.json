@@ -38,6 +38,7 @@
         "print": "cpp",
         "variant": "cpp",
         "algorithm": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "ostream": "cpp"
     }
 }

@@ -6,7 +6,6 @@
 
 using namespace std;
 
-// Tampilkan daftar metode error yang tersedia
 void printErrorMethodOptions() {
     cout << "Pilih metode error:\n";
     cout << "1 = Variance (>0)\n";
@@ -22,7 +21,11 @@ InputParams getUserInput() {
     cout << "Masukkan path gambar input (absolute path): ";
     getline(cin, params.inputImagePath);
 
-    // Validasi metode error
+    size_t dotPos = params.inputImagePath.find_last_of('.');
+    std::string inputExt = (dotPos != std::string::npos) ? 
+                            params.inputImagePath.substr(dotPos + 1) : "";
+    std::transform(inputExt.begin(), inputExt.end(), inputExt.begin(), ::tolower);
+
     printErrorMethodOptions();
     while (true) {
         cout << "Pilihanmu (1-5): ";
@@ -31,24 +34,45 @@ InputParams getUserInput() {
         cout << "Metode tidak valid! Silakan pilih antara 1 sampai 5.\n";
     }
 
-    cout << "Masukkan threshold: ";
-    cin >> params.threshold;
+    while (true) {
+        cout << "Masukkan threshold: ";
+        cin >> params.threshold;
+        if (params.threshold >= 0.0) break;
+        cout << "Threshold tidak boleh negatif.\n";
+    }
 
-    cout << "Masukkan ukuran blok minimum: ";
-    cin >> params.minBlockSize;
+    while (true) {
+        cout << "Masukkan ukuran blok minimum: ";
+        cin >> params.minBlockSize;
+        if (params.minBlockSize >= 0) break;
+        cout << "Ukuran blok minimum tidak boleh negatif.\n";
+    }
 
     cout << "Masukkan target persentase kompresi (0 = nonaktifkan mode ini): ";
     cin >> params.targetCompression;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    cout << "Masukkan path untuk gambar output (absolute path): ";
-    getline(cin, params.outputImagePath);
+    while (true) {
+        cout << "Masukkan path untuk gambar output (absolute path): ";
+        getline(cin, params.outputImagePath);
 
+        size_t dotOut = params.outputImagePath.find_last_of('.');
+        std::string outputExt = (dotOut != std::string::npos) ? 
+                                params.outputImagePath.substr(dotOut + 1) : "";
+        std::transform(outputExt.begin(), outputExt.end(), outputExt.begin(), ::tolower);
+
+        if (outputExt != inputExt) {
+            cout << "Format output harus sama dengan input (" << inputExt << "). Silakan coba lagi.\n";
+        } else {
+            break;
+        }
+    }
     cout << "Masukkan path untuk menyimpan GIF (opsional, tekan enter jika tidak ingin): ";
     getline(cin, params.outputGifPath);
 
     return params;
 }
+
 
 void printOutputStats(const OutputStats& stats) {
     cout << "\n===== Statistik Kompresi =====\n";
@@ -74,7 +98,7 @@ unsigned char* load_image(const char* filename, int& width, int& height, int& ch
     unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
     if (!data) {
         cerr << "Gagal memuat gambar dari: " << filename << endl;
-        exit(1);  // keluar dari program, karena input tidak valid
+        exit(1); 
     }
     return data;
 }

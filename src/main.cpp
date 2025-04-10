@@ -56,8 +56,8 @@ QuadTree findBestThreshold(
 
     for (int i = 0; i < 10; ++i) {
         double mid = (low + high) / 2.0;
-        cout << "Low : " << low << endl;
-        cout << "High : " << high << endl;
+        // cout << "Low : " << low << endl;
+        // cout << "High : " << high << endl;
         QuadTree qt(image, width, height, channels, 1, mid, errorMethod);
         qt.buildTree();
 
@@ -65,11 +65,11 @@ QuadTree findBestThreshold(
         reconstructAndSaveImage(qt, trialPath);
 
         size_t size = fs::file_size(trialPath);
-        cout << "Temp size : " << size << endl;
+        // cout << "Temp size : " << size << endl;
         double ratio = static_cast<double>(size) / originalSize;
-        cout << "Ratio : " << ratio << endl;
+        // cout << "Ratio : " << ratio << endl;
         double diff = abs(ratio - targetRatio);
-        cout << "Diff : " << diff << endl;
+        // cout << "Diff : " << diff << endl;
 
         if (diff < bestDiff) {
             bestDiff = diff;
@@ -106,7 +106,7 @@ QuadTree findBestThreshold(
                 }
                 success = stbi_write_jpg(finalOutputPath.c_str(), w, h, ch, data, 100);
             } else {
-                std::cerr << "Format tidak didukung: hanya PNG dan JPG.\n";
+                std::cerr << "Format tidak didukung: hanya PNG, JPG, dan JPEG.\n";
             }
 
             if (!success) {
@@ -120,7 +120,7 @@ QuadTree findBestThreshold(
     try {
         fs::remove_all(tempFolder);
     } catch (...) {}
-
+    
     return bestTree;
 }
 
@@ -178,7 +178,7 @@ int main() {
     size_t compressedSize = fs::file_size(params.outputImagePath);
 
     OutputStats stats {
-        executionTime,
+        static_cast<double>(executionTime),
         originalSize,
         compressedSize,
         compressedSize / static_cast<double>(originalSize),
@@ -187,7 +187,7 @@ int main() {
     };
 
     printOutputStats(stats);
-
     stbi_image_free(image);
+    
     return 0;
 }

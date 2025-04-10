@@ -8,8 +8,6 @@ namespace ErrorCalculator {
         int channels = 3;
         int pixelCount = width * height;
         double mean[3] = {0.0, 0.0, 0.0};
-
-        // Hitung rata-rata untuk tiap channel
         for (int i = 0; i < block.size(); i += channels) {
             for (int c = 0; c < channels; ++c) {
                 mean[c] += block[i + c];
@@ -18,8 +16,6 @@ namespace ErrorCalculator {
         for (int c = 0; c < channels; ++c) {
             mean[c] /= pixelCount;
         }
-
-    // Hitung MAD: rata-rata nilai absolut deviasi dari mean
     double mad[3] = {0.0, 0.0, 0.0};
     for (int i = 0; i < block.size(); i += channels) {
         for (int c = 0; c < channels; ++c) {
@@ -47,9 +43,7 @@ namespace ErrorCalculator {
     double calculateVariance(const Block& block, int width, int height) {
         const std::vector<uint8_t>& data = block;
         int pixelCount = width * height;
-
         double mean[3] = {0.0f, 0.0f, 0.0f};
-
         for (int i = 0; i < data.size(); i += 3) {
             mean[0] += data[i];     // R
             mean[1] += data[i + 1]; // G
@@ -58,7 +52,6 @@ namespace ErrorCalculator {
         mean[0] /= pixelCount;
         mean[1] /= pixelCount;
         mean[2] /= pixelCount;
-
         double variance[3] = {0.0f, 0.0f, 0.0f};
         for (int i = 0; i < data.size(); i += 3) {
             variance[0] += (data[i]     - mean[0]) * (data[i]     - mean[0]);
@@ -77,22 +70,18 @@ namespace ErrorCalculator {
         int channels = 3;
         int totalPixels = width * height;
         double entropy = 0.0;
-
         for (int c = 0; c < channels; ++c) {
             std::map<uint8_t, int> freq;
             for (int i = c; i < block.size(); i += channels) {
                 freq[block[i]]++;
             }
-
             double channelEntropy = 0.0;
             for (const auto& [val, count] : freq) {
                 double p = static_cast<double>(count) / totalPixels;
                 channelEntropy -= p * std::log2(p);
             }
-
             entropy += channelEntropy;
         }
-
         return entropy / channels;
     }
 
@@ -100,7 +89,6 @@ namespace ErrorCalculator {
         const double C1 = 6.5025, C2 = 58.5225;
         int channels = 3;
         int totalPixels = width * height;
-
         double ssim_total = 0.0;
 
         for (int c = 0; c < channels; ++c) {
@@ -130,7 +118,6 @@ namespace ErrorCalculator {
 
             ssim_total += ssim;
         }
-
         return ssim_total / channels;
     }
 
@@ -145,7 +132,7 @@ namespace ErrorCalculator {
             case ENTROPY_METHOD:
                 return calculateEntropy(block1, width, height);
             case SSIM_METHOD:
-                return 1.0 - calculateSSIM(block1, block2, width, height); // SSIM tinggi = bagus, jadi dibalik
+                return 1.0 - calculateSSIM(block1, block2, width, height); // SSIM tinggi = bagus, jadi kebalik
             default:
                 return 0.0;
         }
