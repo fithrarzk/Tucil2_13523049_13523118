@@ -65,18 +65,18 @@ std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int heigh
 
     auto block = getBlock(x, y, width, height);
     auto avgColor = calculateAverageColor(block);
-    // double error = calculateError(block, avgColor, width, height);
-
-    // if (width <= minBlockSize || height <= minBlockSize || error <= threshold) {
-    //     node->isLeaf = true;
-    //     node->color = avgColor;
-    //     return node;
-    // }
+    double error = calculateError(block, avgColor, width, height);
     node->color = avgColor;
-    if (width <= minBlockSize || height <= minBlockSize) {
+
+    if (width <= minBlockSize || height <= minBlockSize || error <= threshold) {
         node->isLeaf = true;
         return node;
     }
+    // node->color = avgColor;
+    // if (width <= minBlockSize || height <= minBlockSize) {
+    //     node->isLeaf = true;
+    //     return node;
+    // }
 
     node->isLeaf = false;
     int halfW = width / 2;

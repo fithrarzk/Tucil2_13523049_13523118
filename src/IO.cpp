@@ -9,11 +9,11 @@ using namespace std;
 // Tampilkan daftar metode error yang tersedia
 void printErrorMethodOptions() {
     cout << "Pilih metode error:\n";
-    cout << "1 = Variance\n";
-    cout << "2 = MAD (Mean Absolute Deviation)\n";
-    cout << "3 = Max Pixel Difference\n";
-    cout << "4 = Entropy\n";
-    cout << "5 = SSIM\n";
+    cout << "1 = Variance (>0)\n";
+    cout << "2 = MAD (Mean Absolute Deviation) (0-255)\n";
+    cout << "3 = Max Pixel Difference (0-255)\n";
+    cout << "4 = Entropy (0-8)\n";
+    cout << "5 = SSIM (0-1)\n";
 }
 
 InputParams getUserInput() {
