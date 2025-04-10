@@ -53,7 +53,7 @@ Program ini mengimplementasikan algoritma Divide and Conquer dalam bentuk metode
 ```
 
 
-## How to Run (CLI)
+## How to Run
 1. Clone repository ini dengan mengetikkan `git clone https://github.com/fithrarzk/Tucil2_13523049_13523118` pada terminal.
 2. Pindah ke directory src dengan `cd src`.
 3. Jalankan `g++ -std=c++17 -O2 -Wall main.cpp IO.cpp ErrorCalculator.cpp QuadTree.cpp Reconstruct.cpp external-libs/stb_img.cpp -I./header -I./external-libs -o image_compressor.exe` pada terminal untuk kompilasi.
