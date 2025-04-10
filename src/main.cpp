@@ -35,7 +35,7 @@ int main() {
     reconstructAndSaveImage(qt, params.outputImagePath);
     printImageSavedMessage(params.outputImagePath);
     if (!params.outputGifPath.empty()) {
-        reconstructAndSaveWithGif(qt, params.outputGifPath);
+        reconstructByLevel(qt, params.outputGifPath);
     }
 
     // 5. Hitung ukuran kompresi (asumsi ukuran simpul)

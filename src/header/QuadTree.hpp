@@ -5,6 +5,7 @@
 #include <memory>
 #include <cstdint>
 #include <string>
+#include <map>
 #include "ErrorCalculator.hpp"
 
 struct QuadTreeNode {
@@ -46,6 +47,10 @@ private:
 
     // Rekursif membangun pohon dari area (x, y) dengan ukuran width x height
     std::unique_ptr<QuadTreeNode> build(int x, int y, int width, int height, int depth);
+
+    void collectNodesPerDepth(std::vector<std::vector<QuadTreeNode*>>& levels);
+
+    void collectNodesByDepth(std::map<int, std::vector<QuadTreeNode*>>& nodesByDepth);
 
     // Ambil blok piksel dari gambar
     std::vector<uint8_t> getBlock(int x, int y, int width, int height);

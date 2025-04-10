@@ -17,4 +17,6 @@ void drawNode(QuadTreeNode* node, unsigned char* output, int imgWidth, int imgHe
 
 void reconstructAndSaveWithGif(const QuadTree& qt, const std::string& gifPath);
 
+void reconstructByLevel(const QuadTree& qt, const std::string& gifPath);
+
 #endif

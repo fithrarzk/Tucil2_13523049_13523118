@@ -3,6 +3,8 @@
 #include <cstring>
 #include <iostream>
 #include <iomanip>
+#include <queue>
+#include <map>
 
 QuadTree::QuadTree(const unsigned char* img, int width, int height, int channels,
                    int minBlockSize, double threshold, int errorMethod)
@@ -34,9 +36,6 @@ std::vector<uint8_t> QuadTree::calculateAverageColor(const std::vector<uint8_t>&
         sum[i % channels] += block[i];
     }
     std::vector<uint8_t> avg(channels);
-    // std::cout << "Rata-rata warna: ";
-    // for (uint8_t c : avg) std::cout << (int)c << " ";
-    // std::cout << std::endl;
     for (int c = 0; c < channels; ++c) {
         avg[c] = static_cast<uint8_t>(sum[c] / totalPixels);
     }
@@ -45,12 +44,10 @@ std::vector<uint8_t> QuadTree::calculateAverageColor(const std::vector<uint8_t>&
 }
 
 double QuadTree::calculateError(const std::vector<uint8_t>& block, const std::vector<uint8_t>& avgColor, int width, int height) {
-    // bandingkan block dengan dirinya sendiri
     if (errorMethod == MAD_METHOD || errorMethod == VARIANCE_METHOD || errorMethod == ENTROPY_METHOD) {
         return ErrorCalculator::calculateError(errorMethod, block, block, width, height);
     }
 
-    // buat avgBlock
     std::vector<uint8_t> avgBlock(block.size());
     for (size_t i = 0; i < block.size(); i += channels) {
         for (int c = 0; c < channels; ++c) {
@@ -60,8 +57,6 @@ double QuadTree::calculateError(const std::vector<uint8_t>& block, const std::ve
     return ErrorCalculator::calculateError(errorMethod, block, avgBlock, width, height);
 }
 
-
-
 std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int height, int depth) {
     auto node = std::make_unique<QuadTreeNode>(x, y, width, height);
     ++totalNodes;
@@ -70,9 +65,6 @@ std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int heigh
     auto block = getBlock(x, y, width, height);
     auto avgColor = calculateAverageColor(block);
     double error = calculateError(block, avgColor, width, height);
-
-    // std::cout << "Error at (" << x << "," << y << "), size = (" << width << "x" << height 
-    //       << "), error = " << error << std::endl;
 
     if (width <= minBlockSize || height <= minBlockSize || error <= threshold) {
         node->isLeaf = true;
@@ -90,6 +82,42 @@ std::unique_ptr<QuadTreeNode> QuadTree::build(int x, int y, int width, int heigh
     node->children[3] = build(x + halfW, y + halfH, width - halfW, height - halfH, depth + 1); // Bottom-right
 
     return node;
+}
+
+void QuadTree::collectNodesPerDepth(std::vector<std::vector<QuadTreeNode*>>& levels) {
+    if (!root) return;
+
+    std::queue<std::pair<QuadTreeNode*, int>> q;
+    q.push({ root.get(), 0 });
+
+    while (!q.empty()) {
+        auto [node, depth] = q.front(); q.pop();
+
+        if (levels.size() <= depth) {
+            levels.emplace_back();
+        }
+        levels[depth].push_back(node);
+
+        if (!node->isLeaf) {
+            for (auto& child : node->children) {
+                if (child) {
+                    q.push({ child.get(), depth + 1 });
+                }
+            }
+        }
+    }
+}
+
+void QuadTree::collectNodesByDepth(std::map<int, std::vector<QuadTreeNode*>>& nodesByDepth) {
+    std::function<void(QuadTreeNode*, int)> dfs = [&](QuadTreeNode* node, int depth) {
+        if (!node) return;
+        nodesByDepth[depth].push_back(node);
+        if (node->isLeaf) return;
+        for (auto& child : node->children) {
+            if (child) dfs(child.get(), depth + 1);
+        }
+    };
+    dfs(root.get(), 0);
 }
 
 int QuadTree::getMaxDepth() const {
